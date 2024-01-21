@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-    <form action="{{ url_for('edit', index=index) }}" method="post">
-        <input type="text" name="task" value="{{ todo['task']}}">
-        <button type="submit">Save</button>
-    </form>
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between;">
+            <p>Edit task</p>
+            <a href="/"><span class="close">&times;</span></a>
+        </div>
+        <form action="{{ url_for('edit', index=task_to_edit.id) }}" method="post">
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <input type="text" name="new_title" value="{{ task_to_edit.title}}" class="title">
+                <textarea type="" name="new_desc" rows="6" class="description">{{task_to_edit.description}}</textarea>
+                <div style="display: flex; justify-content: end;">
+                    <button type="submit">Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </body>
+
 </html>

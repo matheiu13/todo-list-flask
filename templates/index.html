@@ -1,26 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-    <h1>To Do List</h1>
-    <ul>
-        {% for todo in todos %}
-        <li>
-            <input type="checkbox" name="done" {% if todo['done'] %} checked {%endif%} onchange="this.form.submit()">
-            <span {%if todo['done'] %} style="text-decoration: line-through;" {%endif%} >{{todo['task']}}</span>
-            <a href="{{ url_for('edit', index=loop.index0)}}">Edit</a>
-            <a href="{{ url_for('delete', index=loop.index0)}}">Delete</a>
+    <div style="display: flex; gap: 10px">
+        <h1>To Do List</h1>
+        <button id="myBtn" class="add">
+            <p style="margin: 0; padding: 0;">Add a task</p>
+        </button>
+    </div>
+    <ul class="task-container">
+        {% for todo in all_tasks %}
+        <li class="todo">
+            <div>
+                <h2 style="margin-top: 2px;">{{todo['title']}}</h2>
+                <p>{{todo['description']}}</p>
+            </div>
+
+            <div class="actions">
+                <p><a href="{{ url_for('edit', index=todo.id)}}">Edit</a></p>
+                <p>|</p>
+                <p><a href="{{ url_for('delete', index=todo.id)}}">Delete</a></p>
+            </div>
         </li>
         {% endfor %}
     </ul>
 
-    <form action="{{ url_for('add') }}" method="post">
-        <input type="text" name="task">
-        <button type="submit">Add to do</button>
-    </form>
+    <div class="modal" id="myModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Add a new task</p>
+            <form action="{{ url_for('add') }}" method="post">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <input type="text" name="task" placeholder="Title" class="title">
+                    <textarea type="" name="desc" placeholder="Description" rows="6" class="description"></textarea>
+                    <div style="display: flex; justify-content: end;">
+                        <button type="submit">Add Task</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
+
 </html>
